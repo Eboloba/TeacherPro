@@ -11,9 +11,6 @@
 - [База данных](#база-данных)
 - [Роли и права доступа](#роли-и-права-доступа)
 - [Функциональность](#функциональность)
-- [Тестирование](#тестирование)
-- [Деплой](#деплой)
-- [Лицензия](#лицензия)
 
 ## Описание
 
@@ -377,23 +374,6 @@ Authorization: Bearer {jwt_token}
 - Фильтрация и поиск по данным
 - Статистика платформы
 
-## Тестирование
-
-### Проверка вручную
-
-1. Протестируйте основные сценарии:
-   - Регистрация и вход
-   - Создание курса преподавателем
-   - Запись на курс студентом
-   - Прохождение урока и теста
-   - Получение сертификата
-   - Модерация курса администратором
-
-2. Проверьте права доступа:
-   - Студент не может редактировать чужие курсы
-   - Преподаватель не может публиковать курсы без модерации
-   - Администратор имеет доступ ко всем функциям
-
 ### Логирование
 
 Бэкенд ведёт лог ошибок в `backend/error.log`. При отладке проверяйте:
@@ -406,53 +386,4 @@ Authorization: Bearer {jwt_token}
 define('DEBUG_MODE', true);
 ```
 
-## Деплой
 
-### Подготовка продакшена
-
-1. Отключите режим отладки:
-```php
-// backend/config.php
-define('DEBUG_MODE', false);
-ini_set('display_errors', 0);
-```
-
-2. Соберите фронтенд:
-```bash
-cd frontend
-npm run build
-```
-
-3. Настройте веб-сервер для раздачи `frontend/dist/` и проксирования `/api` на PHP
-
-### Пример конфигурации Nginx
-
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-    
-    root /var/www/teacherpro/frontend/dist;
-    index index.html;
-    
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-    
-    location /api {
-        alias /var/www/teacherpro/backend;
-        try_files $uri $uri/ /index.php?$query_string;
-        
-        location ~ \.php$ {
-            fastcgi_pass unix:/var/run/php/php8.0-fpm.sock;
-            fastcgi_index index.php;
-            include fastcgi_params;
-            fastcgi_param SCRIPT_FILENAME $request_filename;
-        }
-    }
-}
-```
-
-## Лицензия
-
-Учебный проект. Распространяется в образовательных целях.
